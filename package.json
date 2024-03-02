@@ -1,0 +1,23 @@
+{
+  "name": "assessment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oluwaseun Odueso",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "firebase-admin": "^12.0.0",
+    "http-status": "^1.7.4",
+    "jest": "^29.7.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.1",
+    "sequelize-typescript": "^2.1.6",
+    "typescript": "^5.3.3"
+  }
+}
