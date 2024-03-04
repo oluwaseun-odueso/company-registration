@@ -11,5 +11,4 @@ const signupSchema: ObjectSchema = Joi.object().keys({
     .required()
     .min(0)
     .max(100),
-  imageUrl: Joi.string()
 })

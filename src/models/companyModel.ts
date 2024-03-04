@@ -23,11 +23,7 @@ Company.init({
   Percentage: {
     type: DataTypes.NUMBER,
     allowNull: false,
-  },
-  imageUrl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  }
 }, {
   sequelize,
   modelName: "Company"

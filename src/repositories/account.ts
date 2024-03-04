@@ -1,3 +1,4 @@
+import { AccountType } from "../interfaces/interfaces";
 import { User } from "../models/userModel";
 import bcrypt from 'bcrypt'
 require('dotenv').config()
@@ -26,7 +27,7 @@ export default class AccountRepository {
     }
   }
 
-  async create(payload: {email: string, password: string}): Promise<User> {
+  async create(payload: AccountType): Promise<User> {
     try {
       const user = await User.create(payload)
       return JSON.parse(JSON.stringify(user))
