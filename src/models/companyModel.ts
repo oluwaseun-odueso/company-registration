@@ -1,9 +1,13 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/database";
 
-export class UserA extends Model {}
+export class Company extends Model {}
 
-UserA.init({
+Company.init({
+  userId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   companyName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,8 +23,12 @@ UserA.init({
   Percentage: {
     type: DataTypes.NUMBER,
     allowNull: false,
-  }
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   sequelize,
-  modelName: "UserA"
+  modelName: "Company"
 })
