@@ -19,4 +19,16 @@ export default class CompanyRepository {
       throw new Error(`Error retrieving company: ${error.message}`)
     }
   }
+
+  async getRecentInputs(userId: string) {
+    try {
+      const recentInputs = await Company.findAll({
+        order: [['createdAt', 'DESC']],
+        limit: 10,
+      });
+      return recentInputs
+    } catch (error: any) {
+      throw new Error(`Error fetching recent inputs: ${error.message}`)
+    }
+  }
 }

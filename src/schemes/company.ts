@@ -6,9 +6,5 @@ export const registrationSchema: ObjectSchema = Joi.object().keys({
   numberOfUsers: Joi.number()
     .required(),
   numberOfProducts: Joi.number()
-    .required(),
-  Percentage: Joi.number()
     .required()
-    .min(0)
-    .max(100),
 })
