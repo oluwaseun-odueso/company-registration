@@ -9,6 +9,15 @@ export default class AccountRepository {
     private readonly saltRounds = process.env.SALT_ROUNDS as string
   ){}
 
+  async create(payload: AccountType): Promise<User> {
+    try {
+      const user = await User.create(payload)
+      return JSON.parse(JSON.stringify(user))
+    } catch (error: any) {
+      throw new Error(`Error saving user: ${error.message}`)
+    }
+  }
+
   async findOne(email: string): Promise<User | null> {
     try {
       const user = await User.findOne({ where: {email}})
@@ -27,12 +36,24 @@ export default class AccountRepository {
     }
   }
 
-  async create(payload: AccountType): Promise<User> {
+  async retrievePassword (email: string) {
     try {
-      const user = await User.create(payload)
-      return JSON.parse(JSON.stringify(user))
+      const data = await User.findOne({
+        attributes: ["hashed_password"],
+        where: {email}
+      })
+      return JSON.parse(JSON.stringify(data)).hashed_password;
     } catch (error: any) {
-      throw new Error(`Error saving user: ${error.message}`)
+      throw new Error(`Error retrieving hashed password: ${error.message}`)
+    }
+  }
+
+  async compareHashedPasswordWithUserInput (hashedPassword: string, enteredPassword: string) {
+    try {
+      const confirmPassword = await bcrypt.compare(enteredPassword, hashedPassword)
+      return confirmPassword;
+    } catch (error: any) {
+      throw new Error(`Error comparing passwords: ${error.message}`)
     }
   }
 }

@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from "joi";
 
-export const signupSchema: ObjectSchema = Joi.object().keys({
+export const accountSchema: ObjectSchema = Joi.object().keys({
   email: Joi.string()
     .email({minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
     .required(),

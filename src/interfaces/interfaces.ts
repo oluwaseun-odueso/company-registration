@@ -28,6 +28,7 @@ export type CompanyType = {
 }
 
 export type AccountType = {
+  id: string;
   email: string;
-  password: string
+  hashedPassword: string
 }

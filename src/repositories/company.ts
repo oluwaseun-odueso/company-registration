@@ -1,12 +1,5 @@
 import { CompanyType } from "../interfaces/interfaces";
 import { Company } from "../models/companyModel";
-// export type CompanyType = {
-//   userId: string;
-//   companyName: string;
-//   numberOfUsers: number;
-//   numberOfProducts: number;
-//   Percentage: number;
-// }
 
 export default class CompanyRepository {
   async create(payload: CompanyType): Promise<Company> {
