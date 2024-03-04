@@ -1,16 +1,24 @@
 // authService.ts
 import * as firebaseAdmin from 'firebase-admin';
-import { firebaseConfig } from '../config';
+import { firebaseConfig } from '../config/config';
 
-firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(firebaseConfig),
-});
+class AuthService {
+  private firebaseApp: firebaseAdmin.app.App;
 
-export const verifyToken = async (token: string) => {
-  try {
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
-    return decodedToken;
-  } catch (error) {
-    throw new Error('Invalid token');
+  constructor() {
+    this.firebaseApp = firebaseAdmin.initializeApp({
+      credential: firebaseAdmin.credential.cert(firebaseConfig),
+    });
   }
-};
+
+  async verifyToken(token: string) {
+    try {
+      const decodedToken = await this.firebaseApp.auth().verifyIdToken(token);
+      return decodedToken;
+    } catch (error) {
+      throw new Error('Invalid token');
+    }
+  }
+}
+
+export default AuthService;
