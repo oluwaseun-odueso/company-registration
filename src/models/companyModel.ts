@@ -4,6 +4,11 @@ import sequelize from "../database/database";
 export class Company extends Model {}
 
 Company.init({
+  id: {
+    type: DataTypes.UUIDV4,
+    primaryKey: true,
+    allowNull: false
+  },
   userId: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -20,7 +25,7 @@ Company.init({
     type: DataTypes.NUMBER,
     allowNull: false,
   },
-  Percentage: {
+  percentage: {
     type: DataTypes.NUMBER,
     allowNull: false,
   }

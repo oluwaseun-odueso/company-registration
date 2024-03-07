@@ -25,7 +25,7 @@ export type CompanyType = {
   companyName: string;
   numberOfUsers: number;
   numberOfProducts: number;
-  Percentage: number;
+  percentage: number;
 }
 
 export type AccountType = {
