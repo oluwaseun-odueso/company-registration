@@ -1,10 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/database";
 
-export class User extends Model {}
+export class UserA extends Model {}
 
-User.init({
+UserA.init({
   email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -14,5 +22,5 @@ User.init({
   },
 }, {
   sequelize,
-  modelName: "User"
+  modelName: "UserA"
 })

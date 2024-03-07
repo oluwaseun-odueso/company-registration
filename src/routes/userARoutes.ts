@@ -1,13 +1,13 @@
 import express from 'express';
-import AccountController from '../controllers/user';
+import UserAAccountController from '../controllers/userA';
 import CompanyRepository from '../repositories/company';
-import AccountRepository from '../repositories/account';
+import AccountRepository from '../repositories/userARepo';
 import { isLoggedIn } from '../config/firebase-config';
-const {signupUserA, loginUserA, getRecentInputs, registerCompany} = new AccountController(new AccountRepository(), new CompanyRepository())
+const {signupUserA, loginUserA, getRecentInputs, registerCompany} = new UserAAccountController(new AccountRepository(), new CompanyRepository())
 
 const router = express.Router();
 
-router.post('/signup', isLoggedIn, signupUserA)
+router.post('/signup', signupUserA)
 router.get('/login', loginUserA)
 router.post('/submit', isLoggedIn, registerCompany);
 router.get('/recent', isLoggedIn, getRecentInputs);

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { accountSchema } from "../schemes/signup";
 import { registrationSchema } from "../schemes/company";
-import AccountRepository from "../repositories/account";
+import UserAAccountRepository from "../repositories/userARepo";
 import CompanyRepository from "../repositories/company";
 import { BadRequestError, ServerError } from "../middlewares/errorHandler";
 import { BAD_REQUEST, CREATED, OK, UNAUTHORIZED } from "http-status";
@@ -11,16 +11,15 @@ import {
   auth,
   createUserWithFirebase, 
   signInUserWithFirebase,
-  isLoggedIn
 } from '../config/firebase-config'
 import { s3 } from "../utility/image.config";
 
 
 
 
-export default class AccountController {
+export default class UserAAccountController {
   constructor (
-    private readonly accountRepository: AccountRepository,
+    private readonly accountRepository: UserAAccountRepository,
     private readonly companyRepository: CompanyRepository
   ){}
 
@@ -29,9 +28,12 @@ export default class AccountController {
       const { error } = await Promise.resolve(accountSchema.validate(req.body));
       if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
 
-      const { email, password } = req.body;
+      const { email, password, firstName, lastName } = req.body;
       const user = await createUserWithFirebase(email, password)
       if (!user) return res.status(BAD_REQUEST).send({status: false, message: "Invalid credential"})
+
+      const id = auth.currentUser?.uid as string
+      await this.accountRepository.create({id, email, firstName, lastName, password})
       res.status(CREATED).send(SuccessResponse(`Your account has been created`, user))
     } catch (error: any) {
       throw new ServerError(`Could not sign up user: ${error.message}`)
@@ -63,6 +65,8 @@ export default class AccountController {
       const percentage = (numberOfUsers / numberOfProducts) * 100;
 
       const payload = {id, userId, companyName, numberOfUsers, numberOfProducts, percentage }
+      console.log(payload)
+      console.log('Before')
       const registeredCompany = await this.companyRepository.create(payload)
       console.log(registeredCompany)
       res.status(CREATED).send(SuccessResponse("Your company has been registered", registeredCompany))

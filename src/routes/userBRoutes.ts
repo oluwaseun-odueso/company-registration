@@ -1,17 +1,17 @@
 import express from 'express';
-import { authenticateUserB} from '../middlewares/authMiddleware';
 import { upload } from "../utility/image.config";
-import AccountController from "../controllers/user"
-import AccountRepository from '../repositories/account';
+import UserBAccountController from "../controllers/userB"
+import AccountRepository from '../repositories/userBRepo';
 import CompanyRepository from '../repositories/company';
-const {getRecentInputs} = new AccountController(new AccountRepository(), new CompanyRepository())
+import { isLoggedIn } from '../config/firebase-config';
+const {signupUserB, loginUserB, getRecentInputs} = new UserBAccountController(new AccountRepository(), new CompanyRepository())
 
 const router = express.Router();
 
 
-// router.post('/signup', authenticateUserB, signup)
-// router.get('/login', authenticateUserB, login)
+router.post('/signup', isLoggedIn, signupUserB)
+router.get('/login', isLoggedIn, loginUserB)
 // router.post('/upload-image/:id', authenticateUserB, upload.single('images'), uploadImages)
-router.get('/view-recent', authenticateUserB, getRecentInputs)
+router.get('/view-recent', isLoggedIn, getRecentInputs)
 
 export default router 
