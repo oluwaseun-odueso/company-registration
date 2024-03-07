@@ -15,6 +15,12 @@ if (!database || !user || !password) {
 const sequelize = new Sequelize(database, user, password, {
   host: host,
   dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
 });
 
 sequelize

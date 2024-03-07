@@ -1,6 +1,6 @@
 import { AccountType } from "../interfaces/interfaces";
 import { User } from "../models/userAModel";
-import bcrypt from 'bcrypt'
+// import bcrypt from 'bcrypt'
 require('dotenv').config()
 
 
@@ -27,14 +27,14 @@ export default class AccountRepository {
     }
   }
 
-  async hashPassword (password: string): Promise<string> {
-    try {
-      const hash = await bcrypt.hash(password, this.saltRounds);
-      return hash
-    } catch (error: any) {
-      throw new Error(`Error hashing password: ${error.message}`)
-    }
-  }
+  // async hashPassword (password: string): Promise<string> {
+  //   try {
+  //     const hash = await bcrypt.hash(password, this.saltRounds);
+  //     return hash
+  //   } catch (error: any) {
+  //     throw new Error(`Error hashing password: ${error.message}`)
+  //   }
+  // }
 
   async retrievePassword (email: string) {
     try {
@@ -48,12 +48,12 @@ export default class AccountRepository {
     }
   }
 
-  async compareHashedPasswordWithUserInput (hashedPassword: string, enteredPassword: string) {
-    try {
-      const confirmPassword = await bcrypt.compare(enteredPassword, hashedPassword)
-      return confirmPassword;
-    } catch (error: any) {
-      throw new Error(`Error comparing passwords: ${error.message}`)
-    }
-  }
+  // async compareHashedPasswordWithUserInput (hashedPassword: string, enteredPassword: string) {
+  //   try {
+  //     const confirmPassword = await bcrypt.compare(enteredPassword, hashedPassword)
+  //     return confirmPassword;
+  //   } catch (error: any) {
+  //     throw new Error(`Error comparing passwords: ${error.message}`)
+  //   }
+  // }
 }
