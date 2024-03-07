@@ -1,6 +1,6 @@
 declare global {
   namespace Express {
-    interface Request {
+    export interface Request {
       user?: UserAAuthPayload;
       admin?: UserBAuthPayload
     }
@@ -8,11 +8,11 @@ declare global {
 }
 
 export interface UserAAuthPayload {
-  id: string;
-  companyName: string;
-  numberOfUsers: number; 
-  numberOfProducts: number;
-  Percentage: number;
+  email: string;
+  password: string;
+  // numberOfUsers: number; 
+  // numberOfProducts: number;
+  // Percentage: number;
 }
 
 export interface UserBAuthPayload {
@@ -20,6 +20,7 @@ export interface UserBAuthPayload {
 }
 
 export type CompanyType = {
+  id: string;
   userId: string;
   companyName: string;
   numberOfUsers: number;
@@ -31,4 +32,11 @@ export type AccountType = {
   id: string;
   email: string;
   hashedPassword: string
+}
+
+export type ImageType = {
+  id: string;
+  companyId: string;
+  imageKey: string;
+  imageUrl: string;
 }

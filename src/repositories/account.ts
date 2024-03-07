@@ -1,5 +1,5 @@
 import { AccountType } from "../interfaces/interfaces";
-import { User } from "../models/userModel";
+import { User } from "../models/userAModel";
 import bcrypt from 'bcrypt'
 require('dotenv').config()
 

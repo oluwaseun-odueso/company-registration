@@ -1,14 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/database";
 
-export class Admin extends Model {}
+export class UserB extends Model {}
 
-Admin.init({
-  userId: {
+UserB.init({
+  email: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
   sequelize,
-  modelName: "Admin"
+  modelName: "UserB"
 })

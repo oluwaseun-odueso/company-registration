@@ -1,5 +1,6 @@
-import { CompanyType } from "../interfaces/interfaces";
+import { CompanyType, ImageType } from "../interfaces/interfaces";
 import { Company } from "../models/companyModel";
+import { Images } from "../models/imagesModel";
 
 export default class CompanyRepository {
   async create(payload: CompanyType): Promise<Company> {
@@ -20,7 +21,7 @@ export default class CompanyRepository {
     }
   }
 
-  async getRecentInputs(userId: string) {
+  async getRecentInputs() {
     try {
       const recentInputs = await Company.findAll({
         order: [['createdAt', 'DESC']],
@@ -31,4 +32,13 @@ export default class CompanyRepository {
       throw new Error(`Error fetching recent inputs: ${error.message}`)
     }
   }
+
+  async addImage(propertyImageDetails: ImageType): Promise<ImageType> {
+    try {
+        const imageDetails = await Images.create(propertyImageDetails)
+        return JSON.parse(JSON.stringify(imageDetails))
+    } catch (error: any) {
+        throw new Error(`Error adding image: ${error}`)
+    };
+};
 }

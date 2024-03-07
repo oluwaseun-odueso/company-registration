@@ -1,24 +1,15 @@
-// userARoutes.ts
 import express from 'express';
-import { authenticateUser, authenticateAdmin} from '../middlewares/authMiddleware';
-import AccountController from '../controllers/signup';
-// import { UserAController } from '../controllers/company';
+import { authenticateUserA} from '../middlewares/authMiddleware';
+import AccountController from '../controllers/user';
+import CompanyRepository from '../repositories/company';
+import AccountRepository from '../repositories/account';
+const {signupUserA, loginUserA, getRecentInputs} = new AccountController(new AccountRepository(), new CompanyRepository())
 
-const {signup, login} = new AccountController()
-const { submitFormData, getRecentInputs, } = new UserAController();
 const router = express.Router();
 
-router.post('/signup', authenticateUser, signup)
-
-router.post('/submit', authenticateUser, submitFormData);
-router.get('/recent', authenticateUser||authenticateAdmin, getRecentInputs);
+router.post('/signup', signupUserA)
+router.get('/login', loginUserA)
+// router.post('/submit', authenticateUserA, registerCompany);
+router.get('/recent', authenticateUserA, getRecentInputs);
 
 export default router;
-
-// const userAController = new UserAController();
-// const router = express.Router();
-
-// router.post('/submit', authenticateUser, userAController.submitFormData);
-// router.get('/recent', authenticateUser, userAController.getRecentInputs);
-
-// export default router;
