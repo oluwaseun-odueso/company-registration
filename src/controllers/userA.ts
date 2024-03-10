@@ -2,27 +2,23 @@ import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { accountSchema } from "../schemes/signup";
 import { registrationSchema } from "../schemes/company";
-import UserAAccountRepository from "../repositories/userARepo";
 import CompanyRepository from "../repositories/company";
 import { BadRequestError, ServerError } from "../middlewares/errorHandler";
 import { BAD_REQUEST, CREATED, OK, UNAUTHORIZED } from "http-status";
 import { SuccessResponse } from "../middlewares/res.util";
+import UserAAccountRepository from "../repositories/userARepo";
 import {
   auth,
   createUserWithFirebase, 
   signInUserWithFirebase,
 } from '../config/firebase-config'
 import { s3 } from "../utility/image.config";
-
+const {register, getRecentInputs} = new CompanyRepository()
+const {create, } = new UserAAccountRepository()
 
 
 
 export default class UserAAccountController {
-  constructor (
-    private readonly accountRepository: UserAAccountRepository,
-    private readonly companyRepository: CompanyRepository
-  ){}
-
   async signupUserA (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(accountSchema.validate(req.body));
@@ -33,7 +29,8 @@ export default class UserAAccountController {
       if (!user) return res.status(BAD_REQUEST).send({status: false, message: "Invalid credential"})
 
       const id = auth.currentUser?.uid as string
-      await this.accountRepository.create({id, email, firstName, lastName, password})
+      console.log(id)
+      await create({id, email, firstName, lastName, password})
       res.status(CREATED).send(SuccessResponse(`Your account has been created`, user))
     } catch (error: any) {
       throw new ServerError(`Could not sign up user: ${error.message}`)
@@ -67,7 +64,7 @@ export default class UserAAccountController {
       const payload = {id, userId, companyName, numberOfUsers, numberOfProducts, percentage }
       console.log(payload)
       console.log('Before')
-      const registeredCompany = await this.companyRepository.create(payload)
+      const registeredCompany = await register(payload)
       console.log(registeredCompany)
       res.status(CREATED).send(SuccessResponse("Your company has been registered", registeredCompany))
     } catch (error: any) {
@@ -77,7 +74,7 @@ export default class UserAAccountController {
 
   async getRecentInputs (req: Request, res: Response) {
     try {
-      const recentInputs = await this.companyRepository.getRecentInputs()
+      const recentInputs = await getRecentInputs()
       res.status(OK).send(SuccessResponse("Recent inputs", recentInputs))
     } catch (error: any) {
       throw new ServerError(`Error fetching recent inputs: ${error.message}`)

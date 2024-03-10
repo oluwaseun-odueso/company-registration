@@ -1,11 +1,8 @@
-import { AccountType } from "../interfaces/interfaces";
+import { AccountType } from "../types/types";
 import { UserA } from "../models/userAModel";
 
 
 export default class UserAAccountRepository {
-  constructor(
-  ){}
-
   async create(payload: AccountType): Promise<UserA> {
     try {
       const user = await UserA.create(payload)
@@ -15,7 +12,7 @@ export default class UserAAccountRepository {
     }
   }
 
-  async findOne(email: string): Promise<UserA | null> {
+  async getUser(email: string): Promise<UserA | null> {
     try {
       const user = await UserA.findOne({ where: {email}})
       return user 

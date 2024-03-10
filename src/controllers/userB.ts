@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { accountSchema } from "../schemes/signup";
-import { registrationSchema } from "../schemes/company";
 import UserBAccountRepository from "../repositories/userBRepo";
+import UserAAccountRepository from "../repositories/userARepo";
 import CompanyRepository from "../repositories/company";
+import ImageRepository from "../repositories/images";
 import { BadRequestError, ServerError } from "../middlewares/errorHandler";
-import { BAD_REQUEST, CREATED, OK, UNAUTHORIZED } from "http-status";
+import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from "http-status";
 import { SuccessResponse } from "../middlewares/res.util";
 import {
   auth,
@@ -14,15 +15,26 @@ import {
 } from '../config/firebase-config'
 import { s3 } from "../utility/image.config";
 
+const {
+  saveImage
+} = new ImageRepository()
+
+const {
+  getUser
+} = new UserAAccountRepository()
+
+const {
+  create,
+} = new UserBAccountRepository()
+
+const {
+  getRecentInputs,
+  getCompany
+} = new CompanyRepository()
 
 
 
 export default class UserBAccountController {
-  constructor (
-    private readonly accountRepository: UserBAccountRepository,
-    private readonly companyRepository: CompanyRepository
-  ){}
-
   async signupUserB (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(accountSchema.validate(req.body));
@@ -33,7 +45,7 @@ export default class UserBAccountController {
       if (!user) return res.status(BAD_REQUEST).send({status: false, message: "Invalid credential"})
 
       const id = auth.currentUser?.uid as string
-      await this.accountRepository.create({id, email, firstName, lastName, password})
+      await create({id, email, firstName, lastName, password})
       res.status(CREATED).send(SuccessResponse(`Your account has been created`, user))
     } catch (error: any) {
       throw new ServerError(`Could not sign up user: ${error.message}`)
@@ -56,7 +68,7 @@ export default class UserBAccountController {
 
   async getRecentInputs (req: Request, res: Response) {
     try {
-      const recentInputs = await this.companyRepository.getRecentInputs()
+      const recentInputs = await getRecentInputs()
       res.status(OK).send(SuccessResponse("Recent inputs", recentInputs))
     } catch (error: any) {
       throw new ServerError(`Error fetching recent inputs: ${error.message}`)
@@ -65,7 +77,15 @@ export default class UserBAccountController {
 
   async uploadImages (req: Request, res: Response) {
     const files: any = req.files;
-    const companyId = req.params.id
+    const companyId = req.params.companyId
+    const userId = req.params.userId
+    
+    const company = await getCompany(companyId)
+    if (!company) return res.status(NOT_FOUND).send({status: false, message: "Company not found"})
+
+    const user = await getUser(userId)
+    if (!user) return res.status(NOT_FOUND).send({status: false, message: "User not found"})
+
     try {
         let Keys: string[] = [];
         let Urls: string[] = [];
@@ -85,8 +105,7 @@ export default class UserBAccountController {
               const imageKey = result.Key
               const imageUrl = result.Location
               const id = uuidv4()
-              const userId = auth.currentUser?.uid as string
-              await this.companyRepository.addImage({id, userId,companyId, imageKey, imageUrl})
+              await saveImage({id, userId, companyId, imageKey, imageUrl})
               Keys.push(result.Key);
               Urls.push(result.Location)
             }

@@ -1,9 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/database";
 
-export class Images extends Model {}
+export class Image extends Model {}
 
-Images.init({
+Image.init({
   userId: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -22,5 +22,5 @@ Images.init({
   }
 }, {
   sequelize,
-  modelName: "Images"
+  modelName: "Image"
 })

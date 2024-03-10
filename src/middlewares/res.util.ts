@@ -3,6 +3,5 @@ export const SuccessResponse = (message: string, data?: any, token?: string) => 
     status: true,
     message,
     data,
-    token
   }
 }

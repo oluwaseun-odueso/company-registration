@@ -1,9 +1,9 @@
-import { CompanyType, ImageType } from "../interfaces/interfaces";
+import { CompanyType, ImageType } from "../types/types";
 import { Company } from "../models/companyModel";
-import { Images } from "../models/imagesModel";
+import { Image } from "../models/imagesModel";
 
 export default class CompanyRepository {
-  async create(payload: CompanyType): Promise<Company> {
+  async register(payload: CompanyType): Promise<Company> {
     try {
       const company = await Company.create(payload)
       return JSON.parse(JSON.stringify(company))
@@ -32,13 +32,4 @@ export default class CompanyRepository {
       throw new Error(`Error fetching recent inputs: ${error.message}`)
     }
   }
-
-  async addImage(propertyImageDetails: ImageType): Promise<ImageType> {
-    try {
-        const imageDetails = await Images.create(propertyImageDetails)
-        return JSON.parse(JSON.stringify(imageDetails))
-    } catch (error: any) {
-        throw new Error(`Error adding image: ${error}`)
-    };
-};
 }

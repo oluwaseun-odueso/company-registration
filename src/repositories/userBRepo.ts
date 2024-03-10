@@ -1,4 +1,4 @@
-import { AccountType } from "../interfaces/interfaces";
+import { AccountType } from "../types/types";
 import { UserB } from "../models/userBModel";
 
 

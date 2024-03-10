@@ -1,9 +1,7 @@
 import express from 'express';
 import UserAAccountController from '../controllers/userA';
-import CompanyRepository from '../repositories/company';
-import AccountRepository from '../repositories/userARepo';
 import { isLoggedIn } from '../config/firebase-config';
-const {signupUserA, loginUserA, getRecentInputs, registerCompany} = new UserAAccountController(new AccountRepository(), new CompanyRepository())
+const {signupUserA, loginUserA, getRecentInputs, registerCompany} = new UserAAccountController()
 
 const router = express.Router();
 
