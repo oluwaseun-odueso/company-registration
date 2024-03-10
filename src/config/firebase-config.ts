@@ -30,6 +30,7 @@ export const createUserWithFirebase = async(email: string, password: string) => 
   try {
     const createUser = await createUserWithEmailAndPassword(auth, email, password)
     const user = createUser.user
+    console.log(user)
     return user
   } catch (error: any) {
     const errorCode = error.code;

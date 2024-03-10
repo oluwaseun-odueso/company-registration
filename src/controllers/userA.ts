@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
-import { accountSchema } from "../schemes/signup";
+import { signUpSchema, loginSchema } from "../schemes/accountSchema";
 import { registrationSchema } from "../schemes/company";
 import CompanyRepository from "../repositories/company";
 import { BadRequestError, ServerError } from "../middlewares/errorHandler";
@@ -12,7 +12,6 @@ import {
   createUserWithFirebase, 
   signInUserWithFirebase,
 } from '../config/firebase-config'
-import { s3 } from "../utility/image.config";
 const {register, getRecentInputs} = new CompanyRepository()
 const {create, } = new UserAAccountRepository()
 
@@ -21,7 +20,7 @@ const {create, } = new UserAAccountRepository()
 export default class UserAAccountController {
   async signupUserA (req: Request, res: Response) {
     try {
-      const { error } = await Promise.resolve(accountSchema.validate(req.body));
+      const { error } = await Promise.resolve(signUpSchema.validate(req.body));
       if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
 
       const { email, password, firstName, lastName } = req.body;
@@ -29,7 +28,6 @@ export default class UserAAccountController {
       if (!user) return res.status(BAD_REQUEST).send({status: false, message: "Invalid credential"})
 
       const id = auth.currentUser?.uid as string
-      console.log(id)
       await create({id, email, firstName, lastName, password})
       res.status(CREATED).send(SuccessResponse(`Your account has been created`, user))
     } catch (error: any) {
@@ -39,7 +37,7 @@ export default class UserAAccountController {
 
   async loginUserA (req: Request, res: Response) {
     try {
-      const { error } = await Promise.resolve(accountSchema.validate(req.body));
+      const { error } = await Promise.resolve(loginSchema.validate(req.body));
       if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
       
       const {email, password} = req.body;
@@ -62,10 +60,7 @@ export default class UserAAccountController {
       const percentage = (numberOfUsers / numberOfProducts) * 100;
 
       const payload = {id, userId, companyName, numberOfUsers, numberOfProducts, percentage }
-      console.log(payload)
-      console.log('Before')
       const registeredCompany = await register(payload)
-      console.log(registeredCompany)
       res.status(CREATED).send(SuccessResponse("Your company has been registered", registeredCompany))
     } catch (error: any) {
       throw new ServerError(`Error registering company: ${error.message}`)
@@ -80,36 +75,4 @@ export default class UserAAccountController {
       throw new ServerError(`Error fetching recent inputs: ${error.message}`)
     }
   }
-
-  // async uploadImages (req: Request, res: Response) {
-  //   const files: any = req.files;
-  //   const companyId = req.params.id
-  //   try {
-  //       let Keys: string[] = [];
-  //       let Urls: string[] = [];
-  //       if(files && files.length > 0) {
-  //           for (let i = 0; i < files.length; i++) {
-  //             const filename = `${Date.now()}-${files[i].originalname}`;
-  //             const fileStream = files[i].buffer;
-  //             const contentType = files[i].mimetype;
-  //             const uploadParams = {
-  //             Bucket: process.env.AWS_BUCKET_NAME!,
-  //             Key: filename,
-  //             Body: fileStream,
-  //             ContentType: contentType,
-  //             };
-
-  //             const result: any = await s3.upload(uploadParams).promise();
-  //             const imageKey = result.Key
-  //             const imageUrl = result.Location
-  //             await this.companyRepository.addImage({companyId, imageKey, imageUrl})
-  //             Keys.push(result.Key);
-  //             Urls.push(result.Location)
-  //           }
-  //       }
-  //       res.status(CREATED).send(SuccessResponse{"Image(s) uploaded successfully", Keys, urls: Urls});
-  //   } catch (error: any) {
-  //     throw new ServerError(`Error uploading image(s): ${error.message}`, 'uploadImages() method error')
-  //   }
-  // }
 };

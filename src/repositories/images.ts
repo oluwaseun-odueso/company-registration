@@ -10,13 +10,4 @@ export default class ImageRepository {
       throw new Error(`Error saving image: ${error.message}`)
     }
   }
-
-  // async addImage(propertyImageDetails: ImageType): Promise<ImageType> {
-  //   try {
-  //       const imageDetails = await Image.create(propertyImageDetails)
-  //       return JSON.parse(JSON.stringify(imageDetails))
-  //   } catch (error: any) {
-  //       throw new Error(`Error adding image: ${error}`)
-  //   };
-  // };
 }

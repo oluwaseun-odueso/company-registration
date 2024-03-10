@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
-import { accountSchema } from "../schemes/signup";
+import { signUpSchema, loginSchema } from "../schemes/accountSchema";
 import UserBAccountRepository from "../repositories/userBRepo";
 import UserAAccountRepository from "../repositories/userARepo";
 import CompanyRepository from "../repositories/company";
@@ -20,16 +20,13 @@ const {
 } = new ImageRepository()
 
 const {
-  getUser
-} = new UserAAccountRepository()
-
-const {
   create,
 } = new UserBAccountRepository()
 
 const {
   getRecentInputs,
-  getCompany
+  getCompany,
+  userHasARegisteredCompany
 } = new CompanyRepository()
 
 
@@ -37,7 +34,7 @@ const {
 export default class UserBAccountController {
   async signupUserB (req: Request, res: Response) {
     try {
-      const { error } = await Promise.resolve(accountSchema.validate(req.body));
+      const { error } = await Promise.resolve(signUpSchema.validate(req.body));
       if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
 
       const { email, password, firstName, lastName } = req.body;
@@ -54,7 +51,7 @@ export default class UserBAccountController {
 
   async loginUserB (req: Request, res: Response) {
     try {
-      const { error } = await Promise.resolve(accountSchema.validate(req.body));
+      const { error } = await Promise.resolve(loginSchema.validate(req.body));
       if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
       
       const {email, password} = req.body;
@@ -83,11 +80,10 @@ export default class UserBAccountController {
     const company = await getCompany(companyId)
     if (!company) return res.status(NOT_FOUND).send({status: false, message: "Company not found"})
 
-    const user = await getUser(userId)
+    const user = await userHasARegisteredCompany(userId)
     if (!user) return res.status(NOT_FOUND).send({status: false, message: "User not found"})
 
     try {
-        let Keys: string[] = [];
         let Urls: string[] = [];
         if(files && files.length > 0) {
             for (let i = 0; i < files.length; i++) {
@@ -106,7 +102,6 @@ export default class UserBAccountController {
               const imageUrl = result.Location
               const id = uuidv4()
               await saveImage({id, userId, companyId, imageKey, imageUrl})
-              Keys.push(result.Key);
               Urls.push(result.Location)
             }
         }

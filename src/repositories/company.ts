@@ -1,6 +1,5 @@
 import { CompanyType, ImageType } from "../types/types";
 import { Company } from "../models/companyModel";
-import { Image } from "../models/imagesModel";
 
 export default class CompanyRepository {
   async register(payload: CompanyType): Promise<Company> {
@@ -14,7 +13,7 @@ export default class CompanyRepository {
 
   async getCompany(id: string) {
     try {
-      const company = await Company.findOne({ where: {id}})
+      const company = await Company.findOne({ where: { id }})
       return company
     } catch (error: any) {
       throw new Error(`Error retrieving company: ${error.message}`)
@@ -30,6 +29,15 @@ export default class CompanyRepository {
       return recentInputs
     } catch (error: any) {
       throw new Error(`Error fetching recent inputs: ${error.message}`)
+    }
+  }
+
+  async userHasARegisteredCompany (userId: string) {
+    try {
+      const company = await Company.findOne({ where: { userId }})
+      return company
+    } catch (error: any) {
+      throw new Error(`Error checking if user has a registered company: ${error.message}`)
     }
   }
 }

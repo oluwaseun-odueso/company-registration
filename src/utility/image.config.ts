@@ -18,7 +18,7 @@ export const upload = multer({
     },
   });
 
-// Set up an Amazon S3 client
+//Amazon S3 client
 export const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,

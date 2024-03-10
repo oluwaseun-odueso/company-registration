@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from "joi";
 
-export const accountSchema: ObjectSchema = Joi.object().keys({
+export const signUpSchema: ObjectSchema = Joi.object().keys({
   email: Joi.string()
     .email({minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
     .required(),
@@ -11,4 +11,13 @@ export const accountSchema: ObjectSchema = Joi.object().keys({
     .required(),
   lastName: Joi.string()
     .required()
+})
+
+export const loginSchema: ObjectSchema = Joi.object().keys({
+  email: Joi.string()
+    .email({minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
+    .required(),
+  password: Joi.string()
+    .required(),
+  
 })
