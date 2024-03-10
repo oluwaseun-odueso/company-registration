@@ -1,17 +1,11 @@
 require('dotenv').config()
 
-export const database = {
-  client: process.env.DB_CLIENT || 'postgres',
-  connection: {
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE as string,
-    user: process.env.DB_USERNAME as string,
-    password: process.env.DB_PASSWORD as string,
-    port: process.env.DB_PORT || undefined,
-    socketPath: process.env.DB_SOCKET,
-  }
-}
-
 export const firebaseConfig = {
-  
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 }

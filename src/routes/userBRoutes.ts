@@ -1,7 +1,7 @@
 import express from 'express';
 import { upload } from "../utility/image.config";
 import UserBAccountController from "../controllers/userB"
-import { isLoggedIn } from '../config/firebase-config';
+import { isLoggedIn } from '../middlewares/firebase-config';
 const {signupUserB, loginUserB, getRecentInputs, uploadImages} = new UserBAccountController()
 
 const router = express.Router();

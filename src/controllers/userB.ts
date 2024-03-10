@@ -12,7 +12,7 @@ import {
   auth,
   createUserWithFirebase, 
   signInUserWithFirebase,
-} from '../config/firebase-config'
+} from '../middlewares/firebase-config'
 import { s3 } from "../utility/image.config";
 
 const {
@@ -35,7 +35,7 @@ export default class UserBAccountController {
   async signupUserB (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(signUpSchema.validate(req.body));
-      if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
+      if (error?.details) return res.status(BAD_REQUEST).send({status: false, message: error.details[0].message})
 
       const { email, password, firstName, lastName } = req.body;
       const user = await createUserWithFirebase(email, password)
@@ -52,7 +52,7 @@ export default class UserBAccountController {
   async loginUserB (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(loginSchema.validate(req.body));
-      if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
+      if (error?.details) return res.status(BAD_REQUEST).send({status: false, message: error.details[0].message})
       
       const {email, password} = req.body;
       const user = await signInUserWithFirebase(email, password)

@@ -2,7 +2,7 @@ import multer from 'multer';
 import AWS from 'aws-sdk';
 
 
-// Set up multer to handle file uploads
+// Multer setup to handle file uploads
 export const upload = multer({
     storage: multer.memoryStorage(),
     limits: {

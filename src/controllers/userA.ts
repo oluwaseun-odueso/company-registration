@@ -11,7 +11,7 @@ import {
   auth,
   createUserWithFirebase, 
   signInUserWithFirebase,
-} from '../config/firebase-config'
+} from '../middlewares/firebase-config'
 const {register, getRecentInputs} = new CompanyRepository()
 const {create, } = new UserAAccountRepository()
 
@@ -21,7 +21,7 @@ export default class UserAAccountController {
   async signupUserA (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(signUpSchema.validate(req.body));
-      if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
+      if (error?.details) return res.status(BAD_REQUEST).send({status: false, message: error.details[0].message})
 
       const { email, password, firstName, lastName } = req.body;
       const user = await createUserWithFirebase(email, password)
@@ -38,7 +38,7 @@ export default class UserAAccountController {
   async loginUserA (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(loginSchema.validate(req.body));
-      if (error?.details) return res.status(BAD_REQUEST).send(new BadRequestError(error.details[0].message))
+      if (error?.details) return res.status(BAD_REQUEST).send({status: false, message: error.details[0].message})
       
       const {email, password} = req.body;
       const user = await signInUserWithFirebase(email, password)
@@ -52,7 +52,7 @@ export default class UserAAccountController {
   async registerCompany (req: Request, res: Response) {
     try {
       const { error } = await Promise.resolve(registrationSchema.validate(req.body));
-      if (error?.details) throw new BadRequestError(error.details[0].message)
+      if (error?.details) return res.status(BAD_REQUEST).send({status: false, message: error.details[0].message})
 
       const { companyName, numberOfUsers, numberOfProducts } = req.body
       const id = uuidv4()

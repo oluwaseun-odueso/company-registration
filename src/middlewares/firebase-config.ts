@@ -2,25 +2,28 @@ import {Request, Response, NextFunction} from "express"
 import { UNAUTHORIZED } from 'http-status'
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { firebaseConfig } from "../config/config";
 require('dotenv').config()
 
-const firebaseApp = initializeApp({
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID
-})
+const firebaseApp = initializeApp(firebaseConfig)
+
+// const firebaseApp = initializeApp({
+//   apiKey: process.env.API_KEY,
+//   authDomain: process.env.AUTH_DOMAIN,
+//   projectId: process.env.PROJECT_ID,
+//   storageBucket: process.env.STORAGE_BUCKET,
+//   messagingSenderId: process.env.MESSAGING_SENDER_ID,
+//   appId: process.env.APP_ID,
+//   measurementId: process.env.MEASUREMENT_ID
+// })
 
 export const auth = getAuth(firebaseApp);
 
 onAuthStateChanged(auth, user => {
   if(user != null) {
     const uid = user.uid;
-    console.log("logged in!")
-    console.log(`active user ${uid}, ${user.email}`)
+    // console.log("logged in!")
+    // console.log(`active user ${uid}, ${user.email}`)
   } else {
     console.log("No active user")
   }
@@ -30,7 +33,6 @@ export const createUserWithFirebase = async(email: string, password: string) => 
   try {
     const createUser = await createUserWithEmailAndPassword(auth, email, password)
     const user = createUser.user
-    console.log(user)
     return user
   } catch (error: any) {
     const errorCode = error.code;
