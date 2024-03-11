@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
  
 export interface IErrorResponse {
@@ -13,20 +14,26 @@ export abstract class CustomError extends Error {
   constructor(message: string) {
     super(message);
   }
+
+  sendErrorResponse(res: Response): void {
+    res.status(this.statusCode).json({
+      status: this.status,
+      message: this.message,
+    });
+  }
 }
 
 export class BadRequestError extends CustomError {
   statusCode = StatusCodes.BAD_REQUEST;
-  status = 'error';
+  status = 'false';
 
   constructor(message: string) {
     super(message);
   }
 }
-
 export class NotFoundError extends CustomError {
   statusCode = StatusCodes.NOT_FOUND;
-  status = 'error';
+  status = 'false';
 
   constructor(message: string) {
     super(message);
@@ -35,7 +42,7 @@ export class NotFoundError extends CustomError {
 
 export class NotAuthorizedError extends CustomError {
   statusCode = StatusCodes.UNAUTHORIZED;
-  status = 'error';
+  status = 'false';
 
   constructor(message: string) {
     super(message);
@@ -44,7 +51,7 @@ export class NotAuthorizedError extends CustomError {
 
 export class FileTooLargeError extends CustomError {
   statusCode = StatusCodes.REQUEST_TOO_LONG;
-  status = 'error';
+  status = 'false';
 
   constructor(message: string) {
     super(message);
@@ -53,7 +60,7 @@ export class FileTooLargeError extends CustomError {
 
 export class ServerError extends CustomError {
   statusCode = StatusCodes.SERVICE_UNAVAILABLE;
-  status = 'error';
+  status = 'false';
 
   constructor(message: string) {
     super(message);

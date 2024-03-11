@@ -11,7 +11,7 @@ export const signUpSchema: ObjectSchema = Joi.object().keys({
     }),
   password: Joi.string()
     .min(5)
-    .max(10)
+    .max(15)
     .required()
     .messages({
       'string.base': 'Password must be of type string',
